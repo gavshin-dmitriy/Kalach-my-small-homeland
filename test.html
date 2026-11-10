@@ -8,10 +8,13 @@
 </head>
 <body data-test>
   <main>
-    <div class="back"><a class="btn" href="index.html">← Назад к карте</a></div>
-    <h1>Большой тест о Калаче</h1>
-    <p class="lead">Ответь на все вопросы — в конце узнаешь свой результат.</p>
-    <section class="quiz-box"><div id="quiz"></div></section>
+    <div id="testBox">
+      <div class="back"><a class="btn" href="index.html">← Назад к карте</a></div>
+      <h1>Большой тест о Калаче</h1>
+      <p class="lead">Выбери ответ на каждый вопрос. Правильные ответы и твоё звание появятся после нажатия «Завершить тест».</p>
+      <section class="quiz-box"><div id="quiz"></div></section>
+    </div>
+    <div id="result" class="hidden"></div>
   </main>
   <script src="data.js"></script>
   <script src="script.js"></script>
