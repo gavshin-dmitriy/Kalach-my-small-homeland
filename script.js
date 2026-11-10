@@ -73,6 +73,16 @@ function initMap() {
     L.marker([p.lat, p.lng], { icon: makePinIcon(p), title: p.title }).addTo(map).bindPopup(box);
   });
 
+  // Режим подбора координат: открыть сайт с ?coords и нажать на карту
+  if (new URLSearchParams(location.search).has("coords")) {
+    map.on("click", e => {
+      const t = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+      L.popup().setLatLng(e.latlng)
+        .setContent(`<div class="popup"><h3>Координаты</h3><p>lat: ${e.latlng.lat.toFixed(5)}<br>lng: ${e.latlng.lng.toFixed(5)}</p><p>${t}</p></div>`)
+        .openOn(map);
+    });
+  }
+
   // Приближаем карту так, чтобы все места были видны максимально крупно
   map.fitBounds(L.latLngBounds(PLACES.map(p => [p.lat, p.lng])), {
     paddingTopLeft: [100, 60], paddingBottomRight: [100, 60], maxZoom: 17
@@ -112,7 +122,7 @@ function shuffle(arr) {
   return arr;
 }
 
-function renderQuiz(items, root) {
+function renderQuiz(items, root, onDone) {
   let answered = 0, right = 0;
   const total = items.length;
   const score = document.createElement("p");
@@ -120,6 +130,7 @@ function renderQuiz(items, root) {
 
   items.forEach((item, qi) => {
     const card = document.createElement("div"); card.className = "q-card";
+    if (item.tag) { const t = document.createElement("div"); t.className = "q-tag"; t.textContent = item.tag; card.appendChild(t); }
     const q = document.createElement("h3"); q.textContent = `${qi + 1}. ${item.q}`;
     const list = document.createElement("div"); list.className = "options";
     const exp = document.createElement("p"); exp.className = "explain hidden";
@@ -137,6 +148,7 @@ function renderQuiz(items, root) {
         if (++answered === total) {
           score.textContent = `Твой результат: ${right} из ${total}`;
           score.classList.remove("hidden");
+          if (onDone) onDone(right, total);
         }
       };
       list.appendChild(b);
@@ -174,7 +186,36 @@ async function initPlace(id) {
   }
 }
 
+/* ---------- Большой тест (test.html): все вопросы подряд ---------- */
+async function initTest() {
+  const root = document.getElementById("quiz");
+  try {
+    const all = await loadQuestions();
+    const items = [];
+    PLACES.forEach(p => (all[p.id] || []).forEach(q => items.push({ ...q, tag: p.title })));
+    if (!items.length) { root.textContent = "Вопросов пока нет."; return; }
+    renderQuiz(shuffle(items), root, (right, total) => {
+      const share = right / total;
+      const msg = share === 1 ? "Отлично! Ты настоящий знаток Калача! 🏆"
+        : share >= 0.6 ? "Хороший результат! Ещё немного — и ты эксперт по Калачу."
+        : "Загляни на страницы мест и попробуй ещё раз — всё получится!";
+      const box = document.createElement("div"); box.className = "result";
+      const p = document.createElement("p"); p.textContent = msg;
+      const again = document.createElement("a");
+      again.className = "btn"; again.href = "test.html"; again.textContent = "Пройти ещё раз";
+      const back = document.createElement("a");
+      back.className = "btn btn-ghost"; back.href = "index.html"; back.textContent = "К карте";
+      box.append(p, again, " ", back);
+      root.appendChild(box);
+      box.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  } catch (e) {
+    root.textContent = "Не удалось загрузить вопросы (файл questions.txt).";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  if ("test" in document.body.dataset) initTest();
   if (document.getElementById("map")) initMap();
   const id = document.body.dataset.place;
   if (id) initPlace(id);
