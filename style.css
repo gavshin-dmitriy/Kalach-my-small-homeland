@@ -34,7 +34,16 @@ header.top p { margin: 2px 0 0; opacity: .75; font-size: .85rem; }
 .leaflet-container a.btn { color: #0B1426; }
 
 /* Кнопка теста на карте */
-.test-btn { position: fixed; z-index: 1000; left: 50%; transform: translateX(-50%); bottom: calc(42px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 14px rgba(0,0,0,.55); font-size: 1.1rem; padding: 14px 28px; border-radius: 30px; }
+.test-btn { position: fixed; z-index: 1000; left: 0; right: 0; margin: 0 auto; width: max-content; bottom: calc(42px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 10px; font-size: 1.15rem; padding: 15px 30px; border-radius: 30px; box-shadow: 0 4px 14px rgba(0,0,0,.55); animation: test-glow 2s infinite, test-pulse 2s ease-in-out infinite; }
+.test-btn svg, .test-btn span { pointer-events: none; }
+.test-btn:active { animation: none; transform: scale(.96); }
+@keyframes test-glow {
+  0%   { box-shadow: 0 4px 14px rgba(0,0,0,.55), 0 0 0 0 rgba(232,185,74,.75); }
+  70%  { box-shadow: 0 4px 14px rgba(0,0,0,.55), 0 0 0 20px rgba(232,185,74,0); }
+  100% { box-shadow: 0 4px 14px rgba(0,0,0,.55), 0 0 0 0 rgba(232,185,74,0); }
+}
+@keyframes test-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .test-btn { animation: none; } }
 
 /* Страницы */
 main { max-width: 820px; margin: 0 auto; padding: 0 16px 50px; }
