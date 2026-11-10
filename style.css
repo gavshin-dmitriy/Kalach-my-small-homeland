@@ -5,9 +5,9 @@ body {
   background: linear-gradient(180deg, #0B1426, #14223D) fixed;
   color: #fff; font-size: 18px; line-height: 1.55; min-height: 100vh;
 }
-header.top { padding: 14px 20px; border-bottom: 1px solid rgba(232,185,74,.35); }
-header.top h1 { margin: 0; font-size: 1.4rem; color: #E8B94A; }
-header.top p { margin: 2px 0 0; opacity: .75; font-size: .95rem; }
+header.top { height: 60px; padding: 0 16px; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid rgba(232,185,74,.35); }
+header.top h1 { margin: 0; font-size: 1.25rem; color: #E8B94A; line-height: 1.2; }
+header.top p { margin: 2px 0 0; opacity: .75; font-size: .85rem; }
 
 .btn {
   display: inline-block; background: #E8B94A; color: #0B1426 !important;
@@ -17,16 +17,20 @@ header.top p { margin: 2px 0 0; opacity: .75; font-size: .95rem; }
 .btn:active { transform: scale(.97); }
 
 /* Карта */
-#map { height: calc(100vh - 74px); width: 100%; }
-.gold-marker {
-  width: 26px; height: 26px; background: #E8B94A; border: 3px solid #fff;
-  border-radius: 50% 50% 50% 0; transform: rotate(-45deg) translate(2px, -2px);
-  box-shadow: 0 2px 6px rgba(0,0,0,.5); margin: 2px;
-}
+#map { height: calc(100vh - 60px); height: calc(100dvh - 60px); width: 100%; }
+/* Маркеры: фото-кружок + подпись */
+.pin { position: relative; width: 46px; height: 46px; }
+.pin-dot { position: absolute; inset: 0; border-radius: 50%; background: #E8B94A center / cover no-repeat; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.6); }
+.pin-dot:not(.has-photo)::after { content: ""; position: absolute; inset: 12px; border-radius: 50%; background: #0B1426; }
+.pin-label { position: absolute; white-space: nowrap; background: #0B1426; color: #fff; border: 2px solid #E8B94A; border-radius: 9px; padding: 5px 10px; font-weight: 700; font-size: 16px; line-height: 1.2; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+.side-right .pin-label { left: 52px; top: 50%; transform: translateY(-50%); }
+.side-left .pin-label { right: 52px; top: 50%; transform: translateY(-50%); }
+.side-top .pin-label { bottom: 52px; left: 50%; transform: translateX(-50%); }
+.side-bottom .pin-label { top: 52px; left: 50%; transform: translateX(-50%); }
 .leaflet-popup-content-wrapper { background: #14223D; color: #fff; border: 1px solid #E8B94A; }
 .leaflet-popup-tip { background: #14223D; }
-.popup h3 { margin: 0 0 6px; color: #E8B94A; font-size: 1.15rem; }
-.popup p { margin: 0 0 12px; font-size: 1rem; line-height: 1.4; }
+.popup h3 { margin: 0 0 6px; color: #E8B94A; font-size: 1.25rem; }
+.popup p { margin: 0 0 12px; font-size: 1.05rem; line-height: 1.4; }
 .leaflet-container a.btn { color: #0B1426; }
 
 /* Страницы */
@@ -57,7 +61,10 @@ main h1 { color: #E8B94A; font-size: 2rem; margin: 14px 0; }
 
 @media (max-width: 600px) {
   body { font-size: 20px; }
-  #map { height: calc(100vh - 66px); height: calc(100dvh - 66px); }
+  header.top { height: 52px; }
+  header.top p { display: none; }
+  #map { height: calc(100vh - 52px); height: calc(100dvh - 52px); }
+  .pin-label { font-size: 17px; }
   main h1 { font-size: 1.8rem; }
   .btn { padding: 14px 24px; font-size: 1.05rem; }
   .photo-more { width: 100%; margin-right: 0; }
