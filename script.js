@@ -63,7 +63,7 @@ function makePinIcon(p) {
   const dot = h("span", "pin-dot");
   const label = h("span", "pin-label", p.title);
   el.append(dot, label);
-  return L.divIcon({ className: "", html: el, iconSize: [46, 46], iconAnchor: [23, 23], popupAnchor: [0, -26] });
+  return L.divIcon({ className: "", html: el, iconSize: [38, 38], iconAnchor: [19, 19], popupAnchor: [0, -22] });
 }
 
 function initMap() {
@@ -218,19 +218,25 @@ function renderTest(items, root, onFinish) {
   update();
 
   finish.onclick = () => {
-    const details = cards.map((c, i) => {
-      const chosen = c.opts[picks[i]];
-      return { item: c.item, chosen: chosen.text, ok: chosen.ok, correct: c.opts.find(o => o.ok).text };
-    });
-    onFinish(details.filter(d => d.ok).length, details);
+    try {
+      const details = cards.map((c, i) => {
+        const chosen = c.opts[picks[i]];
+        return { item: c.item, chosen: chosen.text, ok: chosen.ok, correct: c.opts.find(o => o.ok).text };
+      });
+      onFinish(details.filter(d => d.ok).length, details);
+    } catch (e) {
+      progress.textContent = "Не удалось показать результат: " + e.message + ". Обнови страницу (Ctrl+F5).";
+    }
   };
 }
 
 function showResult(right, details) {
   const total = details.length, share = right / total;
   const rank = [...RANKS].sort((a, b) => b.min - a.min).find(r => share >= r.min) || RANKS[0];
-  document.getElementById("testBox").classList.add("hidden");
-  const box = document.getElementById("result");
+  const quizEl = document.getElementById("quiz");
+  (document.getElementById("testBox") || quizEl.closest(".quiz-box")).classList.add("hidden");
+  let box = document.getElementById("result");
+  if (!box) { box = h("div"); box.id = "result"; document.querySelector("main").appendChild(box); }
   box.innerHTML = "";
   box.classList.remove("hidden");
 
