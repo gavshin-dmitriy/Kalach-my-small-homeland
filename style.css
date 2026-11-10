@@ -103,3 +103,9 @@ main h1 { color: #E8B94A; font-size: 2rem; margin: 14px 0; }
 .review.bad p:nth-of-type(1) { color: #ff8a82; }
 .right-answer { color: #6ee09a; font-weight: 700; }
 .actions { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Ссылка-карточка (3D-прогулка и т.п.) */
+.link-card { display: block; margin: 18px 0; padding: 16px 18px; border-radius: 14px; border: 2px solid #E8B94A; background: rgba(232,185,74,.12); color: #fff; text-decoration: none; }
+.link-card:active { transform: scale(.98); }
+.link-title { display: block; color: #E8B94A; font-weight: 700; font-size: 1.2rem; }
+.link-note { display: block; margin-top: 4px; opacity: .85; font-size: .95rem; }

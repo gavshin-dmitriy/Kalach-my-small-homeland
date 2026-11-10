@@ -170,6 +170,13 @@ async function initPlace(id) {
   document.getElementById("title").textContent = p.title;
   const text = document.getElementById("text");
   p.text.forEach(t => text.appendChild(h("p", "", t)));
+  (p.links || []).forEach(l => {
+    const a = h("a", "link-card");
+    a.href = l.url; a.target = "_blank"; a.rel = "noopener";
+    a.append(h("span", "link-title", l.title + " →"));
+    if (l.note) a.append(h("span", "link-note", l.note));
+    text.appendChild(a);
+  });
   renderPhotos(p);
 
   const quizBox = document.getElementById("quiz");
